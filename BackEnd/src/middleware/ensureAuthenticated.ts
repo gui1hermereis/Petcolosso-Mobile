@@ -29,11 +29,9 @@ export function ensureAuthenticated(request: Request, response: Response, next: 
 }
 
 export default function ensureHasAcess(...permittedRoles) {
-  // return a middleware
   return (request, response, next) => {
     const user = getUser(request.headers.authorization);
-    if (user.isDev) return next();
-    if (permittedRoles.includes(user.role)) return next();
+    if (permittedRoles.includes(user)) return next();
     else return response.status(403).json({ message: "Forbidden" });
   };
 }

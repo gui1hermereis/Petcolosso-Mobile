@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
-import http from "http";
 import cors from "cors";
+import http from "http";
 import { Server } from "socket.io";
 import { router, routerFormData } from "./routes";
 import bodyParser from "body-parser";
@@ -25,10 +25,10 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors());
-app.use("/csi-api", router)
+app.use("/petcolosso-api", router)
 
 app.use(formidable());
 app.use(bodyParser.json());
-app.use("/csi-api", routerFormData);
+app.use("/petcolosso-api", routerFormData);
 
 export { serverHttp, io };

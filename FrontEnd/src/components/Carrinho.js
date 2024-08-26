@@ -11,14 +11,14 @@ if(carrinho < 1){
 }
 
 const removeServ = (item) => {
-  let carrinho_temp = carrinho.filter((item2) => item2.idServ != item.idServ).map(({
-      idServ,
-      servico,
-      precoServico
+  let carrinho_temp = carrinho.filter((item2) => item2.id != item.id).map(({
+      id,
+      descricao,
+      valor
     }) => ({
-      idServ,
-      servico,
-      precoServico
+      id,
+      descricao,
+      valor
     })
   )
 
@@ -77,9 +77,9 @@ return (
             }>
 
             <View style={{padding:10}}>
-              <Text style={styles.fontTexto}>Código: {item.idServ}</Text>          
-              <Text style={styles.fontTexto}>Nome: {item.servico} </Text> 
-              <Text style={styles.fontTexto}>Valor: R$ {item.precoServico}</Text> 
+              <Text style={styles.fontTexto}>Código: {item.id}</Text>          
+              <Text style={styles.fontTexto}>Nome: {item.descricao} </Text> 
+              <Text style={styles.fontTexto}>Valor: R$ {item.valor}</Text> 
             </View>  
             </View>                                    
             </View> 

@@ -1,28 +1,34 @@
 import React, {Component, useState, useEffect} from 'react';
 import {FlatList, StyleSheet,View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import {StackActions} from '@react-navigation/native';
+import { ApiURL } from '../configs';
 
 const Servico = ({ route, navigation }) => {
 const [corBack,setBack] = useState("yellow");
 const [visualizaSelecionados,setVisualizaSelecionados]=useState(false);
 const [servicos, setServicos] = useState([]);
-  useEffect(() => {
-  if (servicos == ""){
-    getServicos();
-  }
+const [listaServicosSelecionados, setListaServicosSelecionados]=useState([]);
+const [atualizar, setAtualizar]=useState(route.params.atualizarParams);
+
+function getServicos(){
+  fetch(`${ApiURL}/servicos`)
+  .then((resp) => resp.json())
+  .then((json) => setServicos(json))
+}
+
+useEffect(() => {
+  getServicos();
+
   if (atualizar) {
     setListaServicosSelecionados(atualizar);
     setAtualizar(null);
   }
-});
-
-const [listaServicosSelecionados, setListaServicosSelecionados]=useState([]);
-const [atualizar, setAtualizar]=useState(route.params.atualizarParams);
+}, []);
 
 const clickItemFlatList = (item) =>{
 		let exist = false;
     for (var i=0; i < listaServicosSelecionados.length; i++) {
-      if (item.idServ === listaServicosSelecionados[i].idServ) {
+      if (item.id === listaServicosSelecionados[i].id) {
         exist = true;
         break;
       }
@@ -31,21 +37,15 @@ const clickItemFlatList = (item) =>{
     let total=0   
     if (!exist) {
       // somar
-      listaServicosSelecionados.push({idServ: item.idServ, servico: item.servico, precoServico: item.precoServico});
+      listaServicosSelecionados.push({id: item.id, descricao: item.descricao, valor: item.valor});
 
       for ( i=0; i < listaServicosSelecionados.length; i++) {
-        total = total + listaServicosSelecionados[i].precoServico
+        total = total + listaServicosSelecionados[i].valor
       }
-      alert("Serviço "+item.servico+" adicionado ao pedido.");
+      alert("Serviço "+ item.descricao +" adicionado ao pedido.");
     } else alert("Serviço ja selecionado!!");
     
    global.totalPago= total
-}
-
-function getServicos(){
-  fetch('https://demo5233258.mockable.io/servicos')
-  .then((resp) => resp.json())
-  .then((json) => setServicos(json))
 }
 
 return (
@@ -91,9 +91,9 @@ return (
 
         <View style={{padding:10}}>
 
-          <Text style={styles.fontTexto}>Código: {item.idServ}</Text>          
-          <Text style={styles.fontTexto}>Nome: {item.servico} </Text> 
-          <Text style={styles.fontTexto}>Valor: R$ {item.precoServico}</Text> 
+          <Text style={styles.fontTexto}>Código: {item.id}</Text>          
+          <Text style={styles.fontTexto}>Nome: {item.descricao} </Text> 
+          <Text style={styles.fontTexto}>Valor: R$ {item.valor}</Text> 
 
         </View>  
         </View>                                    

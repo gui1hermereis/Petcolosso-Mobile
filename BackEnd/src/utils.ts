@@ -14,7 +14,6 @@ export const Encrypt = {
 };
 export const getUserId = (auth: string) => jwtDecode<User>(auth.replace("Bearer ", "")).id;
 export const getUserName = (auth: string) => jwtDecode<User>(auth.replace("Bearer ", "")).username;
-export const getUserInstituicao = (auth: string) => jwtDecode<User>(auth.replace("Bearer ", "")).instituicao;
 export const getTokenEmail = () => Math.random().toString(36).slice(2).substring(2, 6).toUpperCase();
 export const dateBrToEua = (stringDate: string) => {
   if (stringDate === null || stringDate === undefined || stringDate === "") return "";
@@ -81,7 +80,6 @@ export const getUser = (auth: string) => {
 };
 
 export const hasAcessModule = (usuario: User, modulo: string) => {
-  if (usuario.isDev) return true;
   if (usuario.isAdm) return true;
   return usuario;
 };
