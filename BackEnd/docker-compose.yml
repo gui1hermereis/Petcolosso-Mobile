@@ -2,8 +2,8 @@ version: '3'
 
 services:
   csi-api:
-    container_name: app-csi-api
-    hostname: csi-api
+    container_name: app-petcolosso-api
+    hostname: petcolosso-api
     restart: always
     build:
       context: .
