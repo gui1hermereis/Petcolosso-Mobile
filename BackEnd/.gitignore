@@ -1,0 +1,7 @@
+/node_modules
+/dist
+# Keep environment variables out of version control
+.yarn/
+dist
+/imagens_upload
+/root/imagens_upload

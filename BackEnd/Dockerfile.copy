@@ -1,0 +1,21 @@
+FROM node:latest as base
+
+WORKDIR /home/node/app
+
+COPY package.json ./
+
+RUN yarn
+
+COPY . .
+
+RUN npx prisma generate
+
+COPY . .
+
+RUN npm run build
+
+COPY . .
+
+FROM base as production
+
+ENV NODE_PATH=./build
