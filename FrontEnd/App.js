@@ -5,12 +5,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 global.totalPago
-
-import Login from './components/Login';
-import Inicio from './components/Inicio'
-import Servico from './components/Servico';
-import Carrinho from './components/Carrinho';
-import Finalizarcompra from './components/Finalizarcompra';
+import Login from './src/components/Login';
+import Inicio from './src/components/Inicio'
+import Servico from './src/components/Servico';
+import Carrinho from './src/components/Carrinho';
+import Finalizarcompra from './src/components/Finalizarcompra';
 
 const Stack = createStackNavigator();
 
