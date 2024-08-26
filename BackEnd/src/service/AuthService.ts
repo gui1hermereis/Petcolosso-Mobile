@@ -2,6 +2,7 @@ import { User } from "./../types";
 import prismaClient from "../prisma";
 import { sign } from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { Encrypt } from "../utils";
 
 class AuthService {
   async loginUsuario(username: string, password: string) {
@@ -32,6 +33,26 @@ class AuthService {
     } catch (e) {
       console.log(e);
       return { message: "Erro no servidor" };
+    }
+  }
+
+  async cadastrarUsuario(username: string, password: string) {
+    try {
+      const passwordCrypt = await Encrypt.cryptPassword(password);
+
+        await prismaClient.user.create({
+          data: {
+              username: username,
+              password: passwordCrypt,
+              isAdm: false,
+          },
+        });
+
+        return true;
+    } catch (e) {
+        console.log("🚀 ~ e:", e)
+
+        return false;
     }
   }
 }

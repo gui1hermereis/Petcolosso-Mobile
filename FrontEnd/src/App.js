@@ -9,6 +9,7 @@ import Inicio from './components/Inicio';
 import Servico from './components/Servico';
 import Carrinho from './components/Carrinho';
 import Finalizarcompra from './components/Finalizarcompra';
+import Cadastro from './components/Cadastro';
 
 const Stack = createStackNavigator();
 
@@ -66,6 +67,12 @@ function App() {
           name="Finalizarcompra"
           component={Finalizarcompra}
           options={{ title: 'Finalizarcompra' }}
+        />
+
+        <Stack.Screen
+          name="Cadastro"
+          component={Cadastro}
+          options={{ title: 'Cadastro' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

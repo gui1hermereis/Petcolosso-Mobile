@@ -7,8 +7,8 @@ const router = Router();
 const routerFormData = Router();
 
 //AUTH
-router.post("/login", new AuthenticateUserController().signin);
-
-routerFormData.get("/servicos", ensureAuthenticated, ServicosController.listaServicos)
+router.post("/Login", new AuthenticateUserController().signin);
+router.post("/Cadastro", new AuthenticateUserController().cadastrarUsuario);
+routerFormData.get("/Servicos", ensureAuthenticated, ServicosController.listaServicos)
 
 export { router, routerFormData };

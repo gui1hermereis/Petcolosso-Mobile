@@ -11,7 +11,7 @@ const Servico = ({ route, navigation }) => {
   const [atualizar, setAtualizar] = useState(route.params.atualizarParams);
 
   function getServicos() {
-    fetch(`${ApiURL}/servicos`)
+    fetch(`${ApiURL}/Servicos`)
       .then((resp) => resp.json())
       .then((json) => setServicos(json))
   }

@@ -4,13 +4,13 @@ import { StackActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { ApiURL } from '../configs';
 
-const Login = ({ navigation }) => {
+const Cadastro = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  async function postLogin() {
+  async function postCadastro() {
     try {
-      const url = `${ApiURL}/Login`;
+      const url = `${ApiURL}/Cadastro`;
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
@@ -22,17 +22,13 @@ const Login = ({ navigation }) => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Erro na requisição');
-      }
-
       const responseJson = await response.json();
 
-      if (responseJson.token) {
-        await AsyncStorage.setItem('userToken', responseJson.token);
-        navigation.dispatch(StackActions.replace('Inicio'));
+      if (response.ok) {
+        Alert.alert('Sucesso', responseJson.message);
+        navigation.dispatch(StackActions.replace('Login', { atualizarParams: null }));
       } else {
-        Alert.alert('Acesso não permitido', 'Usuário ou senha inválidos.');
+        Alert.alert('Erro', responseJson.message);
       }
     } catch (error) {
       Alert.alert('Erro', 'Informação não atualizada: ' + error.message);
@@ -47,7 +43,7 @@ const Login = ({ navigation }) => {
         <TextInput
           value={username}
           onChangeText={setUsername}
-          placeholder={'Login'}
+          placeholder={'Username'}
           style={styles.input}
           placeholderTextColor="#aaa"
         />
@@ -61,7 +57,7 @@ const Login = ({ navigation }) => {
           placeholderTextColor="#aaa"
         />
 
-        <TouchableOpacity style={styles.button} onPress={postLogin}>
+        <TouchableOpacity style={styles.button} onPress={postCadastro}>
           <Text style={styles.buttonText}>LOGIN</Text>
         </TouchableOpacity>
       </View>
@@ -69,21 +65,16 @@ const Login = ({ navigation }) => {
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.link}
-          onPress={() => navigation.dispatch(StackActions.replace('Cadastro', { atualizarParams: null }))}
+          onPress={() => navigation.dispatch(StackActions.replace('Login', { atualizarParams: null }))}
         >
-          <Text style={styles.footerText}>Não tem uma conta? <Text style={styles.link}>Cadastre-se</Text></Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.link}
-        >
-          <Text style={styles.footerText}>Esqueceu sua senha? <Text style={styles.link}>Recuperar</Text></Text>
+          <Text style={styles.footerText}>Já tem uma conta? <Text style={styles.link}>Fazer Login</Text></Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-export default Login;
+export default Cadastro;
 
 const styles = StyleSheet.create({
   container: {
