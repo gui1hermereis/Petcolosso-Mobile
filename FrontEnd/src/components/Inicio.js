@@ -8,7 +8,7 @@ const Inicio = ({ navigation }) => {
     try {
       await AsyncStorage.removeItem('userToken');
       console.log('Token removido com sucesso');
-      navigation.dispatch(StackActions.replace('Login')); 
+      navigation.dispatch(StackActions.replace('Login'));
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível deslogar: ' + error.message);
     }

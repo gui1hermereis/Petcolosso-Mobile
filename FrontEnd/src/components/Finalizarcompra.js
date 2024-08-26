@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Image, View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
-import {StackActions} from '@react-navigation/native';
+import { Image, View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
+import { StackActions } from '@react-navigation/native';
 
 const Finalizarcompra = ({ route, navigation }) => {
   return (
@@ -12,7 +12,7 @@ const Finalizarcompra = ({ route, navigation }) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          
+
           <Text
             style={{
               fontSize: 25,
@@ -21,24 +21,24 @@ const Finalizarcompra = ({ route, navigation }) => {
             }}>
           </Text>
           <View
-							style={{
-								flex: 1,
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}>
-							<Text style={{fontWeight: 'bold'}}>
-								Tem certeza que deseja finalizar a compra?
-							</Text>
-        </View>
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontWeight: 'bold' }}>
+              Tem certeza que deseja finalizar a compra?
+            </Text>
+          </View>
         </View>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.dispatch(StackActions.replace('Inicio')) +
-          alert("Pedido concluido com sucesso, obrigado pela confiança")}>
+            alert("Pedido concluido com sucesso, obrigado pela confiança")}>
           <Text>Confirmar compra</Text>
         </TouchableOpacity>
 
-       <TouchableOpacity
+        <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.dispatch(StackActions.replace('Inicio'))}>
           <Text>Voltar</Text>
@@ -50,17 +50,17 @@ const Finalizarcompra = ({ route, navigation }) => {
 
 export default Finalizarcompra;
 const styles = StyleSheet.create({
-button: {
+  button: {
     width: "100%",
-    height: 40,   
+    height: 40,
     padding: 10,
-    marginTop: 5,     
+    marginTop: 5,
     borderWidth: 1,
     borderColor: '#bd75f0',
     marginBottom: 10,
-    borderRadius:5,
+    borderRadius: 5,
     backgroundColor: "#bd75f0",
     alignItems: 'center',
-    color: 'white',    
+    color: 'white',
   },
 });

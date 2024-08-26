@@ -4,7 +4,7 @@ import { StackActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { ApiURL } from '../configs';
 
-const Login = ({ navigation }) => { 
+const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -47,14 +47,14 @@ const Login = ({ navigation }) => {
 
       <TextInput
         value={username}
-        onChangeText={setUsername} 
+        onChangeText={setUsername}
         placeholder={'Login'}
         style={styles.input}
       />
 
       <TextInput
         value={password}
-        onChangeText={setPassword} 
+        onChangeText={setPassword}
         placeholder={'Senha'}
         secureTextEntry={true}
         style={styles.input}

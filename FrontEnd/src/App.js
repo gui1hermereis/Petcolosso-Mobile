@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   if (isLoggedIn === null) {
-    return null; 
+    return null;
   }
 
   return (
