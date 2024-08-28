@@ -26,9 +26,9 @@ class AuthenticateUserController {
 
   async cadastrarUsuario(request: Request, response: Response) {
     try {
-      const { username, password } = request.body;
+      const { username, password, email } = request.body;
       const service = new AuthService();
-      const result = await service.cadastrarUsuario(username, password);
+      const result = await service.cadastrarUsuario(username, password, email);
 
       if (result) {
         if (result === true) {
@@ -40,8 +40,39 @@ class AuthenticateUserController {
         return response.status(400).json({ message: "Erro ao cadastrar usuário." });
       }
     } catch (err) {
-      console.error("Erro ao cadastrar usuário:", err);
       return response.status(500).json({ message: "Erro interno no servidor ao cadastrar usuário." });
+    }
+  }
+  async enviarCodigo(request: Request, response: Response) {
+    try {
+      const { email } = request.body;
+      const service = new AuthService();
+      const result = await service.enviarCodigo(email);
+
+      if (result) return response.status(200).json(result);
+            else return response.status(400).json({ message: "Erro ao enviar codigo" });
+        } catch (err) {
+            return response.status(400).json({ message: "Erro ao enviar codigo" });
+        }
+  }
+
+  async verificacaoDeCodigo(request: Request, response: Response) {
+    try {
+      const { email, codigo } = request.body;
+      const service = new AuthService();
+      const result = await service.verificacaoDeCodigo(email, codigo);
+
+      if (result) {
+        if (result === true) {
+          return response.status(200).json({ message: "Codigo valido." });
+        } else {
+          return response.status(400).json({ message: "Codigo invalido." });
+        }
+      } else {
+        return response.status(400).json({ message: "Codigo invalido." });
+      }
+    } catch (err) {
+      return response.status(500).json({ message: "Erro interno no servidor ao validar o codigo." });
     }
   }
 }

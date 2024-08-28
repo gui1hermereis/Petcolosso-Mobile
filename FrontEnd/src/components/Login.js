@@ -75,6 +75,7 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.link}
+          onPress={() => navigation.dispatch(StackActions.replace('Recuperar', { atualizarParams: null }))}
         >
           <Text style={styles.footerText}>Esqueceu sua senha? <Text style={styles.link}>Recuperar</Text></Text>
         </TouchableOpacity>

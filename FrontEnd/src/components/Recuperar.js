@@ -1,22 +1,19 @@
 import { Image, Alert, TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { ApiURL } from '../configs';
 
-const Cadastro = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Recuperar = ({ navigation }) => {
+  const [codigo, setCodigo] = useState("");
   const [email, setEmail] = useState("");
+  const [codigoVisivel, setCodigoVisivel] = useState(false);
 
-  async function postCadastro() {
+  async function postEnviarCodigo() {
     try {
-      const url = `${ApiURL}/Cadastro`;
+      const url = `${ApiURL}/EnviarCodigo`;
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-          username: username,
-          password: password,
           email: email,
         }),
         headers: {
@@ -28,7 +25,33 @@ const Cadastro = ({ navigation }) => {
 
       if (response.ok) {
         Alert.alert('Sucesso', responseJson.message);
-        navigation.dispatch(StackActions.replace('Login', { atualizarParams: null }));
+        setCodigoVisivel(true); 
+      } else {
+        Alert.alert('Erro', responseJson.message);
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Informação não atualizada: ' + error.message);
+    }
+  }
+
+  async function postEnviarValidarCodigo() {
+    try {
+      const url = `${ApiURL}/ValidarCodigo`;
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email,
+          codigo: codigo,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      });
+
+      const responseJson = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Sucesso', responseJson.message);
       } else {
         Alert.alert('Erro', responseJson.message);
       }
@@ -43,32 +66,28 @@ const Cadastro = ({ navigation }) => {
 
       <View style={styles.card}>
         <TextInput
-          value={username}
-          onChangeText={setUsername}
-          placeholder={'Username'}
-          style={styles.input}
-          placeholderTextColor="#aaa"
-        />
-
-        <TextInput
           value={email}
           onChangeText={setEmail}
           placeholder={'Email'}
           style={styles.input}
           placeholderTextColor="#aaa"
         />
-
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder={'Senha'}
-          secureTextEntry={true}
-          style={styles.input}
-          placeholderTextColor="#aaa"
-        />
-
-        <TouchableOpacity style={styles.button} onPress={postCadastro}>
-          <Text style={styles.buttonText}>LOGIN</Text>
+        {codigoVisivel && ( 
+          <TextInput
+            value={codigo}
+            onChangeText={setCodigo}
+            placeholder={'Código de recuperação'}
+            style={styles.input}
+            placeholderTextColor="#aaa"
+          />
+        )}
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={codigoVisivel ? postEnviarValidarCodigo : postEnviarCodigo}
+        >
+          <Text style={styles.buttonText}>
+            {codigoVisivel ? 'Verificar Código' : 'Enviar Código'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -84,7 +103,7 @@ const Cadastro = ({ navigation }) => {
   );
 }
 
-export default Cadastro;
+export default Recuperar;
 
 const styles = StyleSheet.create({
   container: {

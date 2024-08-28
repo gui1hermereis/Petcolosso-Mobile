@@ -11,6 +11,14 @@ export const Encrypt = {
       .then((hash) => hash),
 
   comparePassword: (password: string, hashPassword: string) => bcrypt.compare(password, hashPassword).then((resp) => resp),
+
+  cryptUser: (user: string) =>
+    bcrypt
+      .genSalt(10)
+      .then((salt) => bcrypt.hash(user, salt))
+      .then((hash) => hash),
+
+  compareUser: (user: string, hashUser: string) => bcrypt.compare(user, hashUser).then((resp) => resp),
 };
 export const getUserId = (auth: string) => jwtDecode<User>(auth.replace("Bearer ", "")).id;
 export const getUserName = (auth: string) => jwtDecode<User>(auth.replace("Bearer ", "")).username;
