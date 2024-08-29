@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: -200,
   },
   modalContent: {
     backgroundColor: 'white',
     borderRadius: 10,
+    marginTop: -550,
     padding: 20,
     alignItems: 'center',
     width: '80%',

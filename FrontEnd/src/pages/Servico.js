@@ -1,13 +1,16 @@
-import React, { Component, useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import { ApiURL } from '../configs';
+import Modal from 'react-native-modal';
 import styles from '../styles/styles';
 
 const Servico = ({ route, navigation }) => {
   const [servicos, setServicos] = useState([]);
   const [listaServicosSelecionados, setListaServicosSelecionados] = useState([]);
   const [atualizar, setAtualizar] = useState(route.params.atualizarParams);
+  const [isErrorModalServicos, setErrorModalServicos] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   function getServicos() {
     fetch(`${ApiURL}/servicos`)
@@ -40,8 +43,12 @@ const Servico = ({ route, navigation }) => {
       for (i = 0; i < listaServicosSelecionados.length; i++) {
         total = total + listaServicosSelecionados[i].valor
       }
-      alert("Serviço " + item.descricao + " adicionado ao pedido.");
-    } else alert("Serviço ja selecionado!!");
+      setModalMessage("Serviço " + item.descricao + " adicionado ao pedido.");
+      setErrorModalServicos(true);
+    } else { 
+      setModalMessage("Serviço ja selecionado!!");
+      setErrorModalServicos(true);
+    }
 
     global.totalPago = total
   }
@@ -53,14 +60,15 @@ const Servico = ({ route, navigation }) => {
           data={servicos}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => clickItemFlatList(item)}>
-
               <View style={{
                 borderBottomWidth: 1,
                 borderTopWidth: 1,
                 borderLeftWidth: 1,
                 borderRightWidth: 1,
                 borderRadius: 5,
-                backgroundColor: "white"
+                backgroundColor: "white",
+                padding: 10,
+                marginBottom: 5,
               }}>
 
                 <View style={[
@@ -70,17 +78,16 @@ const Servico = ({ route, navigation }) => {
                   },
                   styles.elementsContainer]
                 }>
-
                   <View style={
                     {
                       width: "50%",
-                      height: 100,
+                      height: 150,
                       alignItems: "center",
-                      backgroundColor: 'white'
+                      backgroundColor: 'white',
                     }}>
 
                     <View style={{ padding: 10 }}>
-                      <Image style={{ height: 80, width: 80 }}
+                      <Image style={{ height: 150, width: 150 }}
                         source={require("../assets/logo1.png")} />
                     </View>
                   </View>
@@ -118,6 +125,18 @@ const Servico = ({ route, navigation }) => {
           onPress={() => navigation.dispatch(StackActions.replace('Inicio'))}>
           <Text style={styles.buttonText}>Voltar</Text>
         </TouchableOpacity>
+
+        <Modal
+          isVisible={isErrorModalServicos}
+          backdropColor="rgba(0, 0, 0, 0.5)"
+          backdropOpacity={0.5}
+          onBackdropPress={() => setErrorModalServicos(false)}
+          style={styles.modal}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
