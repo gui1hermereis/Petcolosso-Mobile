@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Login from './components/Login';
-import Inicio from './components/Inicio';
-import Servico from './components/Servico';
-import Carrinho from './components/Carrinho';
-import Finalizarcompra from './components/Finalizarcompra';
-import Cadastro from './components/Cadastro';
-import Recuperar from './components/Recuperar';
+import Login from './pages/Login';
+import Inicio from './pages/Inicio';
+import Servico from './pages/Servico';
+import Carrinho from './pages/Carrinho';
+import Finalizarcompra from './pages/Finalizarcompra';
+import Cadastro from './pages/Cadastro';
+import Recuperar from './pages/Recuperar';
 
 const Stack = createStackNavigator();
 

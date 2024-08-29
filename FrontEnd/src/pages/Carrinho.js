@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { StackActions } from '@react-navigation/native';
+import styles from '../styles/styles';
 
 const Carrinho = ({ route, navigation }) => {
   const [carrinho, setCarrinho] = useState(route.params.carrinhoParams);
@@ -95,43 +96,19 @@ const Carrinho = ({ route, navigation }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.dispatch(StackActions.replace('Servico', { atualizarParams: carrinho }))}>
-          <Text>Ver serviços</Text>
+          <Text style={styles.buttonText}>Ver serviços</Text>
+
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.dispatch(StackActions.replace('Finalizarcompra')) +
             alert('Valor total: ' + global.totalPago + ' Reais')}>
-          <Text>finalizar compra</Text>
+          <Text style={styles.buttonText}>Finalizar compra</Text>
         </TouchableOpacity>
-
       </View>
     </SafeAreaView>
   );
 };
 
 export default Carrinho;
-
-const styles = StyleSheet.create({
-  button: {
-    width: "100%",
-    height: 40,
-    padding: 10,
-    marginTop: 5,
-    borderWidth: 1,
-    borderColor: '#bd75f0',
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: "#bd75f0",
-    alignItems: 'center',
-    color: 'white',
-  },
-
-  fontTexto: {
-    margin: 4,
-    fontWeight: 'italic',
-    fontSize: 10,
-    fontFamily: 'century gothic',
-    color: "black"
-  },
-});

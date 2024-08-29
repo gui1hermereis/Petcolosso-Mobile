@@ -7,12 +7,13 @@ const router = Router();
 const routerFormData = Router();
 
 //AUTH
-router.post("/Login", new AuthenticateUserController().signin);
-router.post("/Cadastro", new AuthenticateUserController().cadastrarUsuario);
-router.post("/EnviarCodigo", new AuthenticateUserController().enviarCodigo);
-router.post("/ValidarCodigo", new AuthenticateUserController().verificacaoDeCodigo);
+router.post("/login", new AuthenticateUserController().signin);
+router.post("/cadastro", new AuthenticateUserController().cadastrarUsuario);
+router.post("/enviarCodigo", new AuthenticateUserController().enviarCodigo);
+router.post("/validarCodigo", new AuthenticateUserController().verificacaoDeCodigo);
+router.put("/novaSenha", new AuthenticateUserController().novaSenha);
 
 //SERVIÇOS
-routerFormData.get("/Servicos", ensureAuthenticated, ServicosController.listaServicos)
+routerFormData.get("/servicos", ensureAuthenticated, ServicosController.listaServicos)
 
 export { router, routerFormData };

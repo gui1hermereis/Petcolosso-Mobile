@@ -1,15 +1,25 @@
-import { Image, Alert, TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image, TextInput, View, TouchableOpacity, Text } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { ApiURL } from '../configs';
+import Modal from 'react-native-modal';
+import styles from '../styles/styles';
 
 const Cadastro = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const [isErrorModalVisible, setErrorModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   async function postCadastro() {
+    if (!username || !password || !email) {
+      setModalMessage('Por favor, preencha todos os campos.');
+      setErrorModalVisible(true);
+      return;
+    }
+
     try {
       const url = `${ApiURL}/Cadastro`;
       const response = await fetch(url, {
@@ -27,13 +37,18 @@ const Cadastro = ({ navigation }) => {
       const responseJson = await response.json();
 
       if (response.ok) {
-        Alert.alert('Sucesso', responseJson.message);
-        navigation.dispatch(StackActions.replace('Login', { atualizarParams: null }));
+        setModalMessage('Cadastro realizado com sucesso!');
+        setSuccessModalVisible(true);
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace('Login', { atualizarParams: null }));
+        }, 1500);
       } else {
-        Alert.alert('Erro', responseJson.message);
+        setModalMessage(responseJson.message);
+        setErrorModalVisible(true);
       }
     } catch (error) {
-      Alert.alert('Erro', 'Informação não atualizada: ' + error.message);
+      setModalMessage('Informação não atualizada: ' + error.message);
+      setErrorModalVisible(true);
     }
   }
 
@@ -68,7 +83,7 @@ const Cadastro = ({ navigation }) => {
         />
 
         <TouchableOpacity style={styles.button} onPress={postCadastro}>
-          <Text style={styles.buttonText}>LOGIN</Text>
+          <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
       </View>
 
@@ -80,81 +95,32 @@ const Cadastro = ({ navigation }) => {
           <Text style={styles.footerText}>Já tem uma conta? <Text style={styles.link}>Fazer Login</Text></Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        isVisible={isSuccessModalVisible}
+        backdropColor="rgba(0, 0, 0, 0.5)"
+        backdropOpacity={0.5}
+        onBackdropPress={() => setSuccessModalVisible(false)}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{modalMessage}</Text>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={isErrorModalVisible}
+        backdropColor="rgba(0, 0, 0, 0.5)"
+        backdropOpacity={0.5}
+        onBackdropPress={() => setErrorModalVisible(false)}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{modalMessage}</Text>
+        </View>
+      </Modal>
     </View>
   );
 }
 
 export default Cadastro;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: 20,
-  },
-  logo: {
-    height: 150,
-    width: 150,
-    marginBottom: 40,
-    borderRadius: 75,
-    borderWidth: 5,
-    borderColor: '#bd75f0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 5,
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#bd75f0',
-    borderRadius: 10,
-    backgroundColor: '#f5f5f5',
-    marginBottom: 15,
-    fontSize: 16,
-    color: '#333',
-  },
-  button: {
-    width: '100%',
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: '#bd75f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-    elevation: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  footer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  footerText: {
-    color: '#555',
-    fontSize: 14,
-  },
-  link: {
-    color: '#bd75f0',
-    fontWeight: 'bold',
-  },
-});

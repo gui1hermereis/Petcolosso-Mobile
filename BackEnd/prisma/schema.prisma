@@ -11,19 +11,19 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  username     String?
-  password     String?   
-  email        String?   
-  isAdm        Boolean?  @default(false)
+  id       Int      @id @default(autoincrement())
+  username String?
+  password String?
+  email    String   @unique
+  isAdm    Boolean? @default(false)
 
   @@map("users")
 }
 
 model Servicos {
   id        Int      @id @default(autoincrement())
-  descricao String?   
-  valor     Decimal? 
+  descricao String?
+  valor     Decimal?
 
   @@map("servicos")
 }

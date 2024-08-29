@@ -2,16 +2,15 @@ import React, { Component, useState, useEffect } from 'react';
 import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import { ApiURL } from '../configs';
+import styles from '../styles/styles';
 
 const Servico = ({ route, navigation }) => {
-  const [corBack, setBack] = useState("yellow");
-  const [visualizaSelecionados, setVisualizaSelecionados] = useState(false);
   const [servicos, setServicos] = useState([]);
   const [listaServicosSelecionados, setListaServicosSelecionados] = useState([]);
   const [atualizar, setAtualizar] = useState(route.params.atualizarParams);
 
   function getServicos() {
-    fetch(`${ApiURL}/Servicos`)
+    fetch(`${ApiURL}/servicos`)
       .then((resp) => resp.json())
       .then((json) => setServicos(json))
   }
@@ -36,7 +35,6 @@ const Servico = ({ route, navigation }) => {
 
     let total = 0
     if (!exist) {
-      // somar
       listaServicosSelecionados.push({ id: item.id, descricao: item.descricao, valor: item.valor });
 
       for (i = 0; i < listaServicosSelecionados.length; i++) {
@@ -112,13 +110,13 @@ const Servico = ({ route, navigation }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.dispatch(StackActions.replace('Carrinho', { carrinhoParams: listaServicosSelecionados }))}>
-          <Text>Ver pedidos</Text>
+          <Text style={styles.buttonText}>Ver pedidos</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.dispatch(StackActions.replace('Inicio'))}>
-          <Text>Voltar</Text>
+          <Text style={styles.buttonText}>Voltar</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -126,27 +124,3 @@ const Servico = ({ route, navigation }) => {
 };
 
 export default Servico;
-
-const styles = StyleSheet.create({
-  button: {
-    width: "100%",
-    height: 40,
-    padding: 10,
-    marginTop: 5,
-    borderWidth: 1,
-    borderColor: '#bd75f0',
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: "#bd75f0",
-    alignItems: 'center',
-    color: 'white',
-  },
-
-  fontTexto: {
-    margin: 4,
-    fontWeight: 'italic',
-    fontSize: 10,
-    fontFamily: 'century gothic',
-    color: "black"
-  },
-});

@@ -1,16 +1,22 @@
-import { Image, Alert, TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Image, TextInput, View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { ApiURL } from '../configs';
+import Modal from 'react-native-modal';
+import styles from '../styles/styles';
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isErrorModalVisible, setErrorModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function postLogin() {
+    setIsLoading(true);
     try {
-      const url = `${ApiURL}/Login`;
+      const url = `${ApiURL}/login`;
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
@@ -23,19 +29,26 @@ const Login = ({ navigation }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Erro na requisição');
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || 'Erro na requisição');
       }
 
       const responseJson = await response.json();
 
       if (responseJson.token) {
         await AsyncStorage.setItem('userToken', responseJson.token);
-        navigation.dispatch(StackActions.replace('Inicio'));
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace('Inicio'));
+        }, 500);
       } else {
-        Alert.alert('Acesso não permitido', 'Usuário ou senha inválidos.');
+        setModalMessage(responseJson.message || 'Usuário ou senha inválidos.');
+        setErrorModalVisible(true);
       }
     } catch (error) {
-      Alert.alert('Erro', 'Informação não atualizada: ' + error.message);
+      setModalMessage(error.message || 'Erro desconhecido.');
+      setErrorModalVisible(true);
+    } finally {
+      setTimeout(() => setIsLoading(false), 500);
     }
   }
 
@@ -61,8 +74,16 @@ const Login = ({ navigation }) => {
           placeholderTextColor="#aaa"
         />
 
-        <TouchableOpacity style={styles.button} onPress={postLogin}>
-          <Text style={styles.buttonText}>LOGIN</Text>
+        <TouchableOpacity 
+          style={[styles.button, isLoading && styles.buttonDisabled]} 
+          onPress={() => postLogin()}
+          disabled={isLoading} 
+        >
+          {isLoading ? (
+            <ActivityIndicator size="small" color="#fff" /> 
+          ) : (
+            <Text style={styles.buttonText}>LOGIN</Text>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -80,81 +101,20 @@ const Login = ({ navigation }) => {
           <Text style={styles.footerText}>Esqueceu sua senha? <Text style={styles.link}>Recuperar</Text></Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        isVisible={isErrorModalVisible}
+        backdropColor="rgba(0, 0, 0, 0.5)"
+        backdropOpacity={0.5}
+        onBackdropPress={() => setErrorModalVisible(false)}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{modalMessage}</Text>
+        </View>
+      </Modal>
     </View>
   );
 }
 
 export default Login;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: 20,
-  },
-  logo: {
-    height: 150,
-    width: 150,
-    marginBottom: 40,
-    borderRadius: 75,
-    borderWidth: 5,
-    borderColor: '#bd75f0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 5,
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#bd75f0',
-    borderRadius: 10,
-    backgroundColor: '#f5f5f5',
-    marginBottom: 15,
-    fontSize: 16,
-    color: '#333',
-  },
-  button: {
-    width: '100%',
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: '#bd75f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-    elevation: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  footer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  footerText: {
-    color: '#555',
-    fontSize: 14,
-  },
-  link: {
-    color: '#bd75f0',
-    fontWeight: 'bold',
-  },
-});

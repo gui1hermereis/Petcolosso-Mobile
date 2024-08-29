@@ -2,25 +2,20 @@ import { Request, Response } from "express";
 import { AuthService } from "../service/AuthService";
 
 class AuthenticateUserController {
-
   async signin(request: Request, response: Response) {
     try {
       const { username, password } = request.body;
       const service = new AuthService();
       const result = await service.loginUsuario(username.toUpperCase(), password);
-
-      if (result) {
-        if (result.message) {
-          return response.status(203).json({ message: result.message });
-        } else {
-          return response.status(200).json(result);
-        }
+  
+      if (result.success) {
+        return response.status(200).json(result);
       } else {
-        return response.status(400).json({ message: "Erro ao fazer login." });
+        return response.status(400).json({ message: result.message });
       }
     } catch (err) {
-      console.error("Erro no login:", err);
-      return response.status(500).json({ message: "Erro interno no servidor ao fazer login." });
+      console.error("Erro ao processar login:", err);
+      return response.status(500).json({ message: "Erro interno no servidor ao fazer login. Por favor, tente novamente mais tarde." });
     }
   }
 
@@ -30,30 +25,32 @@ class AuthenticateUserController {
       const service = new AuthService();
       const result = await service.cadastrarUsuario(username, password, email);
 
-      if (result) {
-        if (result === true) {
-          return response.status(200).json({ message: "Usuário cadastrado com sucesso." });
-        } else {
-          return response.status(400).json({ message: "Erro ao cadastrar o usuário." });
-        }
+      if (result.success) {
+        return response.status(200).json({ message: result.message });
       } else {
-        return response.status(400).json({ message: "Erro ao cadastrar usuário." });
+        return response.status(400).json({ message: result.message });
       }
     } catch (err) {
+      console.error("Erro ao cadastrar usuário:", err);
       return response.status(500).json({ message: "Erro interno no servidor ao cadastrar usuário." });
     }
   }
+
   async enviarCodigo(request: Request, response: Response) {
     try {
       const { email } = request.body;
       const service = new AuthService();
       const result = await service.enviarCodigo(email);
 
-      if (result) return response.status(200).json(result);
-            else return response.status(400).json({ message: "Erro ao enviar codigo" });
-        } catch (err) {
-            return response.status(400).json({ message: "Erro ao enviar codigo" });
-        }
+      if (result.success) {
+        return response.status(200).json({ message: result.message });
+      } else {
+        return response.status(400).json({ message: result.message });
+      }
+    } catch (err) {
+      console.error("Erro ao enviar código:", err);
+      return response.status(500).json({ message: "Erro interno no servidor ao enviar código." });
+    }
   }
 
   async verificacaoDeCodigo(request: Request, response: Response) {
@@ -62,17 +59,31 @@ class AuthenticateUserController {
       const service = new AuthService();
       const result = await service.verificacaoDeCodigo(email, codigo);
 
-      if (result) {
-        if (result === true) {
-          return response.status(200).json({ message: "Codigo valido." });
-        } else {
-          return response.status(400).json({ message: "Codigo invalido." });
-        }
+      if (result.success) {
+        return response.status(200).json({ message: result.message });
       } else {
-        return response.status(400).json({ message: "Codigo invalido." });
+        return response.status(400).json({ message: result.message });
       }
     } catch (err) {
-      return response.status(500).json({ message: "Erro interno no servidor ao validar o codigo." });
+      console.error("Erro ao verificar código:", err);
+      return response.status(500).json({ message: "Erro interno no servidor ao verificar código." });
+    }
+  }
+
+  async novaSenha(request: Request, response: Response) {
+    try {
+      const { senha, email } = request.body;
+      const service = new AuthService();
+      const result = await service.novaSenha(senha, email);
+
+      if (result.success) {
+        return response.status(200).json({ message: result.message });
+      } else {
+        return response.status(400).json({ message: result.message });
+      }
+    } catch (err) {
+      console.error("Erro ao alterar senha:", err);
+      return response.status(500).json({ message: "Erro interno no servidor ao alterar senha." });
     }
   }
 }

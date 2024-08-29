@@ -2,6 +2,7 @@ import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, Alert } 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import * as React from 'react';
+import styles from '../styles/styles';
 
 const Inicio = ({ navigation }) => {
   const logout = async () => {
@@ -47,24 +48,5 @@ const Inicio = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    width: "100%",
-    height: 40,
-    padding: 10,
-    marginTop: 5,
-    borderWidth: 1,
-    borderColor: '#bd75f0',
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: "#bd75f0",
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});
 
 export default Inicio;  
