@@ -13,41 +13,20 @@ export const ApiContext = createContext({});
 
 export const ApiContextProvider = ({ children }) => {
 
-    const postLogin = async (username, password) => {
+    const listaServicos = async () => {
         try {
-            const response = await api.post("/login", { username, password });
+            const response = await api.get('/servicos');
             return response.data;
         } catch (error) {
-            throw new Error(error.response?.data?.message || "Erro ao acessar servidor");
+            console.error('Erro ao buscar serviços:', error);
+            return null; 
         }
-    };
-
-    const postEnviarCodigo = async (email) => {
-        try {
-            const response = await api.post("/enviarCodigo", { email });
-            return response.data;
-        } catch (error) {
-            const message = error.response?.data?.message || "Erro ao acessar servidor";
-            throw new Error(message);
-        }
-    };
-
-    const postValidarCodigo = async (email, codigo) => {
-        try {
-            const response = await api.post("/validarCodigo", { email, codigo });
-            return response.data;
-        } catch (error) {
-            const message = error.response?.data?.message || "Erro ao acessar servidor";
-            throw new Error(message);
-        }
-    };
-
+    }
+    
     return (
         <ApiContext.Provider
             value={{
-                postEnviarCodigo,
-                postValidarCodigo,
-                postLogin,
+                listaServicos,
             }}
         >
             {children}

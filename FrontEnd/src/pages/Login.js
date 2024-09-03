@@ -37,9 +37,12 @@ const Login = ({ navigation }) => {
 
       if (responseJson.token) {
         await AsyncStorage.setItem('userToken', responseJson.token);
-        setTimeout(() => {
-          navigation.dispatch(StackActions.replace('Inicio'));
-        }, 500);
+        navigation.navigate('MainTabs', {
+          screen: 'InicioStack',
+          params: {
+            screen: 'Inicio'
+          }
+        });
       } else {
         setModalMessage(responseJson.message || 'Usuário ou senha inválidos.');
         setErrorModalVisible(true);

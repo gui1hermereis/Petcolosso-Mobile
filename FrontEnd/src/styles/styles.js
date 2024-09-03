@@ -1,6 +1,30 @@
+import { Header } from '@react-navigation/stack';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+
+  header: {
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: '#f8f8f8',  
+    alignItems: 'center',
+    justifyContent: 'space-between', 
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',  
+  },
+  searchInput: {
+    flex: 1,  
+    height: 40,
+    borderColor: '#ddd',  
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff', 
+  },
+  iconCart:{
+    padding: 10,
+    alignItems: 'left',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
