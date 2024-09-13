@@ -22,9 +22,9 @@ const Conta = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <View style={styles.header}>
+        <View style={[styles.header, { justifyContent: 'flex-start' }]}>
           <TouchableOpacity
-            style={styles.iconCart}
+            style={[styles.iconCart, { marginLeft: 0 }]} 
             onPress={() => navigation.navigate('Carrinho', { carrinhoParams: carrinho })}
           >
             <MaterialIcons name="shopping-cart" size={40} color="#000" />

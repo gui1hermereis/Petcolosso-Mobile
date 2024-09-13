@@ -1,6 +1,3 @@
 /node_modules
-/dist
 .yarn/
 dist
-/imagens_upload
-/root/imagens_upload

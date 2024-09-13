@@ -1,4 +1,3 @@
-import { Header } from '@react-navigation/stack';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -23,7 +22,6 @@ const styles = StyleSheet.create({
   },
   iconCart:{
     padding: 10,
-    alignItems: 'left',
   },
   container: {
     flex: 1,
