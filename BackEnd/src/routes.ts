@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ensureHasAcess, { ensureAuthenticated } from "./middleware/ensureAuthenticated";
 import { AuthenticateUserController } from "./controllers/AuthController";
-import { ServicosController } from "./controllers/ServicosController";
+import { ProdutosController } from "./controllers/ProdutosController";
 
 const router = Router();
 const routerFormData = Router();
@@ -13,7 +13,7 @@ router.post("/enviarCodigo", new AuthenticateUserController().enviarCodigo);
 router.post("/validarCodigo", new AuthenticateUserController().verificacaoDeCodigo);
 router.put("/novaSenha", new AuthenticateUserController().novaSenha);
 
-//SERVIÇOS
-routerFormData.get("/servicos", ensureAuthenticated, ServicosController.listaServicos)
+//PRODUTOS
+routerFormData.get("/produtos", ensureAuthenticated, ProdutosController.listaServicos)
 
 export { router, routerFormData };

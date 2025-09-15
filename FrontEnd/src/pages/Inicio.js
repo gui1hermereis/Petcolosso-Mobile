@@ -1,50 +1,40 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { FlatList, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput } from 'react-native';
-import { ApiURL } from '../configs';
-import Modal from 'react-native-modal';
+import { ApiURL } from '../../configs';
 import styles from '../styles/styles';
 import { MaterialIcons } from 'react-native-vector-icons';
-import { CartContext } from '../contexts/CartContext'; 
-import { useApi } from '../contexts/ApiContext'; 
 
 const Inicio = ({ route, navigation }) => {
-  const [servicos, setServicos] = useState([]);
-  const [isErrorModalServicos, setErrorModalServicos] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [produtos, setProdutos] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  const { carrinho, addServ, getTotal } = useContext(CartContext); 
-
   useEffect(() => {
-    const fetchServicos = async () => {
+    const fetchProdutos = async () => {
       try {
-        const response = await fetch(`${ApiURL}/servicos`);
+        const response = await fetch(`${ApiURL}/produtos`);
         const data = await response.json();
-        setServicos(data);
+        setProdutos(data);
       } catch (error) {
-        console.error('Erro ao buscar serviços:', error);
+        console.error('Erro ao buscar produtos:', error);
       }
     };
 
-    fetchServicos();
+    fetchProdutos();
   }, []);
 
-  const clickItemFlatList = (item) => {
-    const exist = carrinho.find(serv => serv.id === item.id);
-
-    if (!exist) {
-      addServ({ id: item.id, descricao: item.descricao, valor: item.valor });
-      setModalMessage(`Serviço ${item.descricao} adicionado ao pedido.`);
-    } else {
-      setModalMessage("Serviço já selecionado!!");
+  const adicionarAoCarrinho = async (item) => {
+    try {
+      console.log('Item adicionado ao carrinho', item);
+    } catch (error) {
+      console.error('Erro ao adicionar ao carrinho:', error);
     }
-
-    setErrorModalServicos(true);
   };
 
-  const filteredServicos = servicos.filter(servico =>
-    servico.descricao.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredProdutos = Array.isArray(produtos)
+    ? produtos.filter(produto =>
+      produto.descricao.toLowerCase().includes(searchText.toLowerCase())
+    )
+    : [];
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -52,7 +42,7 @@ const Inicio = ({ route, navigation }) => {
         <View style={styles.header}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Pesquisar serviços..."
+            placeholder="Pesquisar Produtos..."
             value={searchText}
             onChangeText={setSearchText}
           />
@@ -66,10 +56,10 @@ const Inicio = ({ route, navigation }) => {
 
         <View style={{ flex: 1, padding: 16 }}>
           <FlatList
-            data={filteredServicos}
+            data={filteredProdutos}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => clickItemFlatList(item)}>
+              <TouchableOpacity onPress={() => adicionarAoCarrinho(item)}>
                 <View style={{
                   borderBottomWidth: 1,
                   borderTopWidth: 1,
@@ -116,17 +106,6 @@ const Inicio = ({ route, navigation }) => {
               </TouchableOpacity>
             )}
           />
-          <Modal
-            isVisible={isErrorModalServicos}
-            backdropColor="rgba(0, 0, 0, 0.5)"
-            backdropOpacity={0.5}
-            onBackdropPress={() => setErrorModalServicos(false)}
-            style={styles.modal}
-          >
-            <View style={styles.modalContent}>
-              <Text style={styles.modalText}>{modalMessage}</Text>
-            </View>
-          </Modal>
         </View>
       </View>
     </SafeAreaView>

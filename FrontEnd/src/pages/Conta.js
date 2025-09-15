@@ -1,19 +1,14 @@
-import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackActions } from '@react-navigation/native';
-import { MaterialIcons } from 'react-native-vector-icons';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert } from 'react-native';
 import styles from '../styles/styles';
-import { useCart } from '../contexts/CartContext'; 
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
-const Conta = ({ navigation }) => {
-  const { carrinho } = useCart(); 
+const Conta = () => {
+  const { signOut } = useContext(AuthContext);
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('userToken');
-      console.log('Token removido com sucesso');
-      navigation.dispatch(StackActions.replace('Login'));
+      await signOut();
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível deslogar: ' + error.message);
     }
@@ -22,21 +17,12 @@ const Conta = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <View style={[styles.header, { justifyContent: 'flex-start' }]}>
-          <TouchableOpacity
-            style={[styles.iconCart, { marginLeft: 0 }]} 
-            onPress={() => navigation.navigate('Carrinho', { carrinhoParams: carrinho })}
-          >
-            <MaterialIcons name="shopping-cart" size={40} color="#000" />
-          </TouchableOpacity>
-        </View>
-
         <View style={{ paddingBottom: 0, alignItems: 'center' }}>
           <Image style={{ height: 300, width: 300 }} source={require("../assets/logo.png")} />
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={logout}
+          onPress={handleLogout}
         >
           <Text style={styles.buttonText}>Sair</Text>
         </TouchableOpacity>

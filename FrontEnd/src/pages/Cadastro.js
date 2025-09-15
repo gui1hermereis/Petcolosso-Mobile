@@ -1,7 +1,7 @@
 import { Image, TextInput, View, TouchableOpacity, Text } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { ApiURL } from '../configs';
+import { ApiURL } from '../../configs';
 import Modal from 'react-native-modal';
 import styles from '../styles/styles';
 

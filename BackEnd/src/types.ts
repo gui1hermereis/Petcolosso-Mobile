@@ -1,12 +1,20 @@
-export type User = {
+export type Users = {
   id: number;
-  username: string;
-  password?: string;
-  isAdm?: boolean;
+  username: string | null;
+  password: string | null;
+  email: string;
+  isAdm: boolean;
 };
 
-export type Servicos = {
+export type Produtos = {
   id: number;
-  descricao: string;
-  valor?: string;
+  descricao: string | null;
+  valor: number | null;
+};
+
+export type Carrinho = {
+  id: number;
+  idProd: number;
+  idUser: number;
+  quantidade: number;
 };

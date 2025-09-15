@@ -1,0 +1,32 @@
+import { createContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            const token = await AsyncStorage.getItem('userToken');
+            setIsLoggedIn(!!token);
+        };
+        checkLoginStatus();
+    }, []);
+
+    const signIn = async (token) => {
+        await AsyncStorage.setItem('userToken', token);
+        setIsLoggedIn(true);
+    };
+
+    const signOut = async () => {
+        await AsyncStorage.removeItem('userToken');
+        setIsLoggedIn(false);
+    };
+
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, signIn, signOut }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};

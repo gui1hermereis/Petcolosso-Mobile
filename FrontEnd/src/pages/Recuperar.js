@@ -1,7 +1,7 @@
-import { Image, TextInput, View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import React, { useState } from 'react';
+import { Image, TextInput, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
 import { StackActions } from '@react-navigation/native';
-import { ApiURL } from '../configs';
+import { ApiURL } from '../../configs';
 import Modal from 'react-native-modal';
 import styles from '../styles/styles';
 
@@ -14,7 +14,7 @@ const Recuperar = ({ navigation }) => {
   const [newPassword, setNewPassword] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   function validateFields() {
     if (!email) {
@@ -45,7 +45,7 @@ const Recuperar = ({ navigation }) => {
   async function postEnviarCodigo() {
     if (!validateFields()) return;
 
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const url = `${ApiURL}/enviarCodigo`;
       const response = await fetch(url, {
@@ -75,7 +75,7 @@ const Recuperar = ({ navigation }) => {
   async function postValidarCodigo() {
     if (!validateFields()) return;
 
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const url = `${ApiURL}/validarCodigo`;
       const response = await fetch(url, {
@@ -107,7 +107,7 @@ const Recuperar = ({ navigation }) => {
   async function putSalvarSenha() {
     if (!validateFields()) return;
 
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const url = `${ApiURL}/novaSenha`;
       const response = await fetch(url, {
@@ -162,10 +162,10 @@ const Recuperar = ({ navigation }) => {
             <TouchableOpacity
               style={[styles.button, isLoading && styles.buttonDisabled]}
               onPress={codigoVisivel ? postValidarCodigo : postEnviarCodigo}
-              disabled={isLoading} 
+              disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color="#fff" /> 
+                <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <Text style={styles.buttonText}>
                   {codigoVisivel ? 'Verificar Código' : 'Enviar Código'}
@@ -192,12 +192,12 @@ const Recuperar = ({ navigation }) => {
               secureTextEntry={true}
             />
             <TouchableOpacity
-              style={[styles.button, isLoading && styles.buttonDisabled]} 
+              style={[styles.button, isLoading && styles.buttonDisabled]}
               onPress={putSalvarSenha}
-              disabled={isLoading} 
+              disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color="#fff" /> 
+                <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <Text style={styles.buttonText}>
                   Salvar senha

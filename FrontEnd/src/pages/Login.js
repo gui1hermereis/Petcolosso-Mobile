@@ -1,17 +1,21 @@
-import { Image, TextInput, View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image, TextInput, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { StackActions } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { ApiURL } from '../configs';
+import { useNavigation } from '@react-navigation/native';
+import { useState, useContext } from 'react';
+import { ApiURL } from '../../configs';
 import Modal from 'react-native-modal';
 import styles from '../styles/styles';
+import { AuthContext } from '../contexts/AuthContext';
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isErrorModalVisible, setErrorModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
+
+  const { signIn } = useContext(AuthContext);
 
   async function postLogin() {
     setIsLoading(true);
@@ -20,8 +24,8 @@ const Login = ({ navigation }) => {
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-          username: username,
-          password: password,
+          username,
+          password,
         }),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -36,13 +40,7 @@ const Login = ({ navigation }) => {
       const responseJson = await response.json();
 
       if (responseJson.token) {
-        await AsyncStorage.setItem('userToken', responseJson.token);
-        navigation.navigate('MainTabs', {
-          screen: 'InicioStack',
-          params: {
-            screen: 'Inicio'
-          }
-        });
+        signIn(responseJson.token);
       } else {
         setModalMessage(responseJson.message || 'Usuário ou senha inválidos.');
         setErrorModalVisible(true);
@@ -77,13 +75,13 @@ const Login = ({ navigation }) => {
           placeholderTextColor="#aaa"
         />
 
-        <TouchableOpacity 
-          style={[styles.button, isLoading && styles.buttonDisabled]} 
+        <TouchableOpacity
+          style={[styles.button, isLoading && styles.buttonDisabled]}
           onPress={() => postLogin()}
-          disabled={isLoading} 
+          disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator size="small" color="#fff" /> 
+            <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Text style={styles.buttonText}>LOGIN</Text>
           )}

@@ -1,17 +1,17 @@
 import prismaClient from "../prisma";
-import { Servicos } from "../types";
+import { Produtos } from "../types";
 import path from "path";
 
-const ServicosService = {
-    async listaServicos() {
+const ProdutosService = {
+    async listaProdutos() {
         try {
-            let results = await prismaClient.servicos.findMany({
+            let results = await prismaClient.produto.findMany({
             });
             return results;
         } catch (e) {
             console.error("Erro ao buscar Serviços:", e);
             return false;
         }
-    }
+    },
 }
-export { ServicosService };
+export { ProdutosService };

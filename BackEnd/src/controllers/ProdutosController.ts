@@ -1,12 +1,10 @@
-import axios from "axios";
 import { Request, Response } from "express";
-import { ServicosService } from "../service/ServicosService";
-import { getUser } from "../utils";
+import { ProdutosService } from "../service/ProdutosService";
 
-const ServicosController = {
+const ProdutosController = {
     listaServicos: async (request: Request, response: Response) => {
         try {
-            const result = await ServicosService.listaServicos();
+            const result = await ProdutosService.listaProdutos();
             if (result) return response.status(200).json(result);
             else return response.status(400).json({ message: "Erro ao listar Serviços." });
         } catch (err) {
@@ -15,4 +13,4 @@ const ServicosController = {
     },
 };
 
-export { ServicosController };
+export { ProdutosController };

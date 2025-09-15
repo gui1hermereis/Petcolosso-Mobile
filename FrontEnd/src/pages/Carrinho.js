@@ -1,13 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FlatList, View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
-import Modal from 'react-native-modal';
 import styles from '../styles/styles';
-import { CartContext } from '../contexts/CartContext';
+import { ApiURL } from '../../configs';
 
 const Carrinho = () => {
-  const { carrinho, removeServ, getTotal } = useContext(CartContext);
-  const [isErrorModalCarrinho, setErrorModalCarrinho] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCarrinho = async () => {
+      try {
+        const response = await fetch(`${ApiURL}/carrinho`);
+        const data = await response.json();
+        setItems(data);
+      } catch (error) {
+        console.error('Erro ao buscar itens do carrinho:', error);
+      }
+    };
+
+    fetchCarrinho();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -18,21 +29,12 @@ const Carrinho = () => {
               fontSize: 17,
               textAlign: 'center',
             }}>
-            {carrinho.length > 0 ? (
-              "Selecione o item caso queira excluir"
-            ) : (
-              "Nenhum produto no carrinho"
-            )}
           </Text>
         </View>
         <FlatList
-          data={carrinho}
+          data={items}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => {
-              removeServ(item);
-              setModalMessage("Serviço removido!!");
-              setErrorModalCarrinho(true);
-            }}>
+            <TouchableOpacity>
               <View style={{
                 borderBottomWidth: 1,
                 borderTopWidth: 1,
@@ -77,30 +79,9 @@ const Carrinho = () => {
             </TouchableOpacity>
           )}
         />
-        {carrinho.length > 0 &&
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setModalMessage('Valor total: ' + getTotal() + ' Reais');
-              setErrorModalCarrinho(true);
-            }}
-          >
-            <Text style={styles.buttonText}>Finalizar compra</Text>
-          </TouchableOpacity>
-        }
-
-        <Modal
-          isVisible={isErrorModalCarrinho}
-          backdropColor="rgba(0, 0, 0, 0.5)"
-          backdropOpacity={0.5}
-          onBackdropPress={() => setErrorModalCarrinho(false)}
-          style={styles.modal}
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>{modalMessage}</Text>
-          </View>
-        </Modal>
-
+        <TouchableOpacity >
+          <Text style={styles.buttonText}>Finalizar compra</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

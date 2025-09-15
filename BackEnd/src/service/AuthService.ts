@@ -1,4 +1,4 @@
-import { User } from "./../types";
+import { Users } from "./../types";
 import prismaClient from "../prisma";
 import { sign } from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -8,28 +8,28 @@ import { sendRecoveryEmail } from "./EnviarEmailService";
 class AuthService {
   async loginUsuario(username: string, password: string) {
     try {
-      const user: User | null = await prismaClient.user.findFirst({
+      const user: Users | null = await prismaClient.usuario.findFirst({
         where: { username: { equals: username } },
       });
-  
+
       if (!user) {
         return { success: false, message: "Usuário não encontrado!" };
       }
-  
+
       const senhaCorreta = user.password
         ? await bcrypt.compare(password, user.password)
         : false;
-  
+
       if (!senhaCorreta) {
         return { success: false, message: "Senha incorreta!" };
       }
-  
+
       delete user.password;
-  
+
       const token = sign({ ...user }, process.env.JWT_SECRET as string, {
         subject: username,
       });
-  
+
       return { success: true, user, token };
     } catch (e) {
       console.error("Erro ao fazer login:", e);
@@ -41,11 +41,11 @@ class AuthService {
     try {
       const passwordCrypt = await Encrypt.cryptPassword(password);
 
-      const verificaEmail = await prismaClient.user.count({
+      const verificaEmail = await prismaClient.usuario.count({
         where: { email: email }
       });
 
-      const verificaUsuario = await prismaClient.user.count({
+      const verificaUsuario = await prismaClient.usuario.count({
         where: { username: username }
       });
 
@@ -54,7 +54,7 @@ class AuthService {
       } else if (verificaUsuario > 0) {
         return { success: false, message: "Já existe um usuário com esse nome de usuário!" };
       } else {
-        await prismaClient.user.create({
+        await prismaClient.usuario.create({
           data: {
             username: username,
             password: passwordCrypt,
@@ -73,7 +73,7 @@ class AuthService {
 
   async enviarCodigo(email: string) {
     try {
-      const result = await prismaClient.user.findMany({
+      const result = await prismaClient.usuario.findMany({
         select: {
           username: true,
         },
@@ -97,7 +97,7 @@ class AuthService {
 
   async verificacaoDeCodigo(email: string, codigo: string) {
     try {
-      const result = await prismaClient.user.findMany({
+      const result = await prismaClient.usuario.findMany({
         select: {
           username: true,
         },
@@ -122,7 +122,7 @@ class AuthService {
 
   async novaSenha(senha: string, email: string) {
     try {
-      const user = await prismaClient.user.findUnique({
+      const user = await prismaClient.usuario.findUnique({
         select: {
           id: true,
         },
@@ -137,7 +137,7 @@ class AuthService {
 
       const senhaCriptografada = await Encrypt.cryptPassword(senha);
 
-      await prismaClient.user.update({
+      await prismaClient.usuario.update({
         where: { id: user.id },
         data: {
           password: senhaCriptografada,
